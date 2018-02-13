@@ -21,9 +21,9 @@ public class WithItemTouchHelper extends ItemTouchHelper.Callback {
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         //上下拖拽
-        int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-        int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-        int i = makeMovementFlags(dragFlags, swipeFlags);
+        int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN|ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+//        int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+        int i = makeMovementFlags(dragFlags, 0);
         return i;
     }
 
@@ -36,12 +36,7 @@ public class WithItemTouchHelper extends ItemTouchHelper.Callback {
         return true;
     }
 
-    @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        //监听侧滑，1.删除数据 2.调用adapter.notifyItemRemove(postion)
-        Log.i("zyl",direction+"PPPP");
-          itemTouchMoveListener.onItemRemove(viewHolder.getAdapterPosition());
-    }
+
 
     /**
      * 是否允许长按
@@ -53,36 +48,9 @@ public class WithItemTouchHelper extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-         //闲置状态  ItemTouchHelper.ACTION_STATE_IDLE
-        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE){
-             viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.getContext(), R.color.colorAccent));
-
-         }
-        super.onSelectedChanged(viewHolder, actionState);
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
     }
 
-    @Override
-    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        //恢复选中状态
-        viewHolder.itemView.setBackgroundColor(Color.WHITE) ;
 
-        super.clearView(recyclerView, viewHolder);
-    }
-
-     //侧滑动效
-    @Override
-    public void onChildDraw(Canvas c, RecyclerView recyclerView,
-                            RecyclerView.ViewHolder viewHolder,
-                            float dX, float dY, int actionState, boolean isCurrentlyActive) {
-         if (actionState== ItemTouchHelper.ACTION_STATE_SWIPE){
-             float v = 1 - Math.abs(dX) / viewHolder.itemView.getWidth();
-             viewHolder.itemView.setAlpha(v);
-             viewHolder.itemView.setScaleX(v);
-             viewHolder.itemView.setScaleY(v);
-         }
-        super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-
-    }
 }
